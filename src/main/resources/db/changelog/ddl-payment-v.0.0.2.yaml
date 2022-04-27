@@ -1,0 +1,78 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 03_create_withdrawals_table
+      author: fpoirier
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              schemaName: withdrawals
+              tableName: withdrawals
+      changes:
+        - createTable:
+            schemaName: withdrawals
+            tableName: withdrawals
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKeyName: withdrawals_pkey
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    foreignKeyName: fk_withdrawals_user
+                    references: withdrawals.users(id)
+                    nullable: false
+              - column:
+                  name: amount
+                  type: NUMERIC(19, 2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: creation_date
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: true
+              - column:
+                  name: payment_method
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 04_add_users_foreignkey_constraint_in_withdrawals
+      author: fpoirier
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            tableExists:
+              schemaName: withdrawals
+              tableName: withdrawals
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: withdrawals
+            baseTableSchemaName: withdrawals
+            constraintName: fk_withdrawals_user
+            deferrable: true
+            initiallyDeferred: true
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+            referencedColumnNames: id
+            referencedTableName: users
+            referencedTableSchemaName: withdrawals

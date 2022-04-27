@@ -1,0 +1,51 @@
+server:
+  port: 8082
+
+springdoc:
+  api-docs:
+    path: /wezaam-openapi
+
+logging:
+  level:
+    com:
+      wezaam:
+        withdrawal: INFO
+spring:
+  application:
+    name: wezaam-challenge-be
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:postgres}
+    username: ${POSTGRES_USER:postgres}
+    password: ${POSTGRES_PASSWORD:postgres123}
+    hikari:
+      connection-timeout: 2000
+      initialization-fail-timeout: 0
+    jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+  cloud.stream:
+    function.definition: withdrawalPendingConsumer;withdrawalProcessingConsumer
+    kafka:
+      binder:
+        brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
+      bindings:
+        withdrawalPendingConsumer-in-0:
+          consumer:
+            enableDlq: true
+            dlqName: withdrawal-dlq
+        withdrawalProcessingConsumer-in-0:
+          consumer:
+            enableDlq: true
+            dlqName: withdrawal-dlq
+    bindings:
+      withdrawalPendingConsumer-in-0:
+        destination: account-topic
+        group: pending-group
+      withdrawalPendingConsumer-out-0:
+        destination: account-topic
+      withdrawalProcessingConsumer-in-0:
+        destination: payment-topic
+        group: processing-group
+      withdrawalProcessingConsumer-out-0:
+        destination: payment-topic
+      withdrawalSuccess-out-0:
+        destination: withdrawal-success-v1
+

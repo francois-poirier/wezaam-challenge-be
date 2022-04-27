@@ -1,0 +1,19 @@
+package com.wezaam.withdrawal.repository;
+
+import com.wezaam.withdrawal.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface UserRepository extends JpaRepository<User, UUID> {
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.withdrawals")
+    List<User> findUsers();
+
+    @Query("SELECT u FROM User u LEFT JOIN FETCH u.withdrawals where u.id=:id")
+    Optional<User> findByPk(@Param("id") UUID id);
+}

@@ -1,0 +1,36 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 04_insert_users
+      author: fpoirier
+      changes:
+        - insert:
+            schemaName: withdrawals
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "66d7000b-4437-4274-8d80-9f8b8d415d7f"
+              - column:
+                  name: first_name
+                  value: "David"
+        - insert:
+            schemaName: withdrawals
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "a1622490-c5fc-11ec-9d64-0242ac120002"
+              - column:
+                  name: first_name
+                  value: "Arnold"
+        - insert:
+            schemaName: withdrawals
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: "abed7cca-c5fc-11ec-9d64-0242ac120002"
+              - column:
+                  name: first_name
+                  value: "Ilona"
