@@ -22,7 +22,7 @@ spring:
       initialization-fail-timeout: 0
     jpa.database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   cloud.stream:
-    function.definition: withdrawalPendingConsumer;withdrawalProcessingConsumer
+    function.definition: withdrawalPendingConsumer;withdrawalProcessingConsumer;dlqConsumer
     kafka:
       binder:
         brokers: ${KAFKA_HOST:localhost}:${KAFKA_PORT:9092}
@@ -46,6 +46,6 @@ spring:
         group: processing-group
       withdrawalProcessingConsumer-out-0:
         destination: payment-topic
-      withdrawalSuccess-out-0:
-        destination: withdrawal-success-v1
-
+      dlqConsumer-in-0:
+        destination: withdrawal-dlq
+        group: withdrawal-dlq-group
